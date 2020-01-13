@@ -1,0 +1,49 @@
+version: '3'
+services:
+#COMMENT#  shoreline:
+#COMMENT#    build: ./shoreline
+#COMMENT#    command: "shoreline/shoreline -b 0.0.0.0 -f vnc -t arial.ttf -f statistics,listen=0.0.0.0 -w ###WIDTH### -h ###HEIGHT###"
+#COMMENT#    ports:
+#COMMENT#      - 1234:1234 # pixelflut
+#COMMENT#      - 1235:1235 # statistics
+#COMMENT#      - 5900:5900 # vnc
+
+  vncmux:
+    build: ./vncmux
+    command: "sh -c 'sleep 2 && vncmux/vncmux ###HOST### ###PORT_VNC### -l 5901 -w ###WIDTH### -h ###HEIGHT###'"
+    ports:
+      - 5901:5901
+#COMMENT#    links:
+#COMMENT#      - shoreline
+
+  statistics_crawler:
+    build: ./statistics_crawler
+    command: "python3 crawl.py ###HOST### ###PORT_STATISTICS### /tmp/pixelflut_statistics.txt"
+    volumes:
+      - "./pixelflut_statistics.txt:/tmp/pixelflut_statistics.txt"
+#COMMENT#    links:
+#COMMENT#      - shoreline
+
+  node_exporter:
+    image: "prom/node-exporter"
+    command: "--collector.textfile.directory /var/lib/node_exporter/textfile_collector"
+    ports:
+      - 9100:9100
+    volumes:
+      - "./pixelflut_statistics.txt:/var/lib/node_exporter/textfile_collector/pixelflut_statistics.prom"
+
+  prometheus:
+    image: "prom/prometheus"
+    ports:
+      - 9090:9090
+    volumes:
+      - "./prometheus/pixelflut.yml:/etc/prometheus/prometheus.yml"
+    links:
+      - node_exporter
+
+  grafana:
+    build: ./grafana
+    ports:
+      - 80:3000
+    links:
+      - prometheus
