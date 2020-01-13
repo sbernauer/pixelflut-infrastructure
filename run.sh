@@ -22,7 +22,7 @@ esac
 
 if [ $START -eq 1 ]; then
     hostname="shoreline" # Direct link to shoreline-container
-    port_vnc=5900
+    port_vnc=5901
     port_statistics=1235
 else
     read -p "Please enter hostname of the pixelflut server (please dont use localhost, use external ip. Sorry): " hostname
