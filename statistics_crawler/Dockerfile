@@ -1,6 +1,5 @@
-FROM debian
+FROM alpine:3.11.2
 
-RUN apt update && \
-apt install -y python3
+RUN apk add --no-cache python3
 
-ADD crawl.py /
+COPY crawl.py /

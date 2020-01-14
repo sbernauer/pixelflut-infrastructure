@@ -1,9 +1,15 @@
-FROM debian
+FROM alpine:3.11.2 AS build
 
-RUN apt update && \
-    apt install -y git make gcc build-essential libsdl2-dev libpthread-stubs0-dev libvncserver-dev libnuma-dev libfreetype6-dev && \
-    git clone https://github.com/tobleminer/shoreline && \
-    cd shoreline && \
-    make
+# Seperate layer with same packets as in final image to speed up build process
+RUN apk add --no-cache numactl-dev sdl2-dev freetype-dev libvncserver-dev libc-dev
+RUN apk add --no-cache git make gcc pkgconfig linux-headers && \
+git clone https://github.com/tobleminer/shoreline && \
+cd shoreline && \
+make
 
-ADD arial.ttf /
+
+FROM alpine:3.11.2
+
+RUN apk add --no-cache numactl-dev sdl2-dev freetype-dev libvncserver-dev libc-dev
+COPY --from=build /shoreline/shoreline /shoreline
+COPY arial.ttf /

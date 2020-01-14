@@ -24,6 +24,7 @@ if [ $START -eq 1 ]; then
     hostname="shoreline" # Direct link to shoreline-container
     port_vnc=5901
     port_statistics=1235
+    read -p "Please enter a description to display on the screen (empty to emit): " description
 else
     read -p "Please enter hostname of the pixelflut server (please dont use localhost, use external ip. Sorry): " hostname
     read -p "Please enter the VNC port of the pixelflut server (default 5900): " port_vnc
@@ -32,10 +33,10 @@ else
     if [ -z $port_statistics ]; then port_statistics=1235; fi
 fi
 
-read -p "Please enter the width of the screen (default 800): " width
-if [ -z $width ]; then width=800; fi
-read -p "Please enter the height of the screen (default 600): " height
-if [ -z $height ]; then height=600; fi
+read -p "Please enter the width of the screen (default 1280): " width
+if [ -z $width ]; then width=1280; fi
+read -p "Please enter the height of the screen (default 720): " height
+if [ -z $height ]; then height=720; fi
 
 sed -i \
 -e 's/###HOST###/'"$hostname"'/g' \
@@ -43,6 +44,7 @@ sed -i \
 -e 's/###PORT_STATISTICS###/'"$port_statistics"'/g' \
 -e 's/###WIDTH###/'"$width"'/g' \
 -e 's/###HEIGHT###/'"$height"'/g' \
+-e 's/###DESCRIPTION###/'"$description"'/g' \
 docker-compose.yml
 
 cat docker-compose.yml

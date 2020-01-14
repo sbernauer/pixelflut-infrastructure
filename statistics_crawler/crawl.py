@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import sys
+import signal
 import time
 import socket
 import json
@@ -14,6 +15,10 @@ HOST = sys.argv[1]
 PORT = int(sys.argv[2])
 FILE = sys.argv[3]
 
+def sigterm_handler(_signo, _stack_frame):
+    sys.exit(0)
+
+signal.signal(signal.SIGTERM, sigterm_handler)
 
 print(f"Crawling from {HOST} at port {PORT} to file {FILE}")
 while True:
