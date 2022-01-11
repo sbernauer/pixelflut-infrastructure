@@ -1,4 +1,6 @@
 # pixelflut-infrastructure
+:warning: There is a [fork](https://github.com/Poeschl/pixelflut-infrastructure) by [Markus Pöschl](https://github.com/Poeschl) with recent updates. Go check it out!
+
 A docker-setup with pixelflut server (shoreline), VNC-relay and monitoring of the game.
 
 With this tool you can start an pixelflut server, acting as VCN-Server.
